@@ -5,8 +5,10 @@ A new Flutter project.
 
 # TODO
 
-[ ] Add google fonts \n
+[ ] Add a handwrite font
 [ ] animation for add and remove cards
 [ ] delete
 [x] animated background
 [x] edit
+[ ] Colors for the card
+[ ] color of the cards are added on the particles
