@@ -5,6 +5,8 @@ A new Flutter project.
 
 # TODO
 
-[ ] Add google fonts
+[ ] Add google fonts \n
 [ ] animation for add and remove cards
-[ ] pomodoro stuff
+[ ] delete
+[x] animated background
+[x] edit

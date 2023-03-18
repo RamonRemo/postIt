@@ -1,15 +1,22 @@
 import 'package:animated_post_it/models/post_it_entity.dart';
+import 'package:animated_post_it/presentation/animated_background.dart';
 import 'package:animated_post_it/presentation/custom_rect_tween.dart';
 import 'package:animated_post_it/presentation/hero_dialog_route.dart';
 import 'package:animated_post_it/presentation/home_controller.dart';
-import 'package:animated_post_it/widgets/custom_tile.dart';
+import 'package:animated_post_it/widgets/todo_card.dart';
+import 'package:animated_post_it/widgets/todo_edit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../widgets/todo_add_card.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  static int hero = 0;
+  const Home({super.key});
+
+  static heroGiver() {
+    return Home.hero++;
+  }
 
   @override
   State<Home> createState() => _HomeState();
@@ -30,7 +37,7 @@ class _HomeState extends State<Home> {
 
     return Stack(
       children: [
-        _backGround(),
+        const CustomAnimatedBackground(),
         _bodyAndButton(context, size),
       ],
     );
@@ -60,9 +67,33 @@ class _HomeState extends State<Home> {
         itemBuilder: (context, index) {
           final item = controller.list[index];
 
-          return CustomTile(
+          return TodoCard(
             title: item.title,
             description: item.description,
+            heroTag: item.hero,
+            onTap: () {
+              Navigator.of(context).push(
+                HeroDialogRoute(
+                  builder: (_) {
+                    return TodoEditCard(
+                      entity: PostItEntity(
+                        title: item.title,
+                        description: item.description,
+                        hero: item.hero,
+                      ),
+                      onEdit: (PostItEntity entity) {
+                        setState(() {
+                          controller.list.removeAt(index);
+                          controller.list.insert(index, entity);
+
+                          Navigator.pop(context);
+                        });
+                      },
+                    );
+                  },
+                ),
+              );
+            },
           );
         },
       ),
@@ -100,7 +131,7 @@ class _HomeState extends State<Home> {
               height: 50,
               width: 50,
               decoration: BoxDecoration(
-                color: Colors.cyan,
+                color: Colors.blueGrey[500],
                 borderRadius: BorderRadius.circular(30),
               ),
               child: const Icon(
@@ -109,22 +140,6 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Container _backGround() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF191B1C),
-            Color(0xFF191D1F),
-          ],
-          stops: [0.0, 1],
         ),
       ),
     );

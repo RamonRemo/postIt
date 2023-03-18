@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class PostItEntity extends StatelessWidget {
   final String title;
   final String description;
+  final int hero;
 
   const PostItEntity({
     super.key,
     required this.title,
     required this.description,
+    required this.hero,
   });
 
   @override

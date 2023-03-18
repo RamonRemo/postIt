@@ -1,25 +1,25 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animated_post_it/models/post_it_entity.dart';
-import 'package:animated_post_it/presentation/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-
+// import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:animated_post_it/presentation/custom_rect_tween.dart';
 
-class TodoAddCard extends StatelessWidget {
-  final Function(PostItEntity) onAdd;
+class TodoEditCard extends StatelessWidget {
+  final Function(PostItEntity) onEdit;
+  final PostItEntity entity;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
 
-  TodoAddCard({
+  TodoEditCard({
     Key? key,
-    required this.onAdd,
+    required this.onEdit,
+    required this.entity,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: 'button',
+      tag: entity.hero,
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin!, end: end!);
       },
@@ -30,7 +30,7 @@ class TodoAddCard extends StatelessWidget {
             height: 300,
             width: 330,
             decoration: BoxDecoration(
-              color: Colors.cyan,
+              color: Colors.blueGrey[900],
               borderRadius: BorderRadius.circular(30),
             ),
           ),
@@ -44,8 +44,7 @@ class TodoAddCard extends StatelessWidget {
             height: 300,
             width: 330,
             decoration: BoxDecoration(
-              // color: Colors.cyan,
-              color: Colors.cyan,
+              color: Colors.blueGrey[900],
               borderRadius: BorderRadius.circular(30),
             ),
             child: buildCard(context),
@@ -74,17 +73,16 @@ class TodoAddCard extends StatelessWidget {
           );
 
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
           return;
         }
 
         final model = PostItEntity(
           title: titleController.text,
           description: descController.text,
-          hero: Home.heroGiver(),
+          hero: entity.hero,
         );
 
-        onAdd(model);
+        onEdit(model);
       },
       child: const Text(
         'Add',
@@ -96,6 +94,7 @@ class TodoAddCard extends StatelessWidget {
   }
 
   Expanded _buildTextField() {
+    descController.text = entity.description;
     return Expanded(
       child: TextFormField(
         onEditingComplete: () {
@@ -122,8 +121,10 @@ class TodoAddCard extends StatelessWidget {
   }
 
   TextField _buildTitle() {
+    titleController.text = entity.title;
+
     return TextField(
-      autofocus: kIsWeb,
+      // autofocus: kIsWeb,
       controller: titleController,
       style: const TextStyle(
         color: Colors.white,
