@@ -15,6 +15,7 @@ dependencies:
   auto_size_text: ^3.0.0
   animated_background:
     path: ../animatedBackground\flutter_animated_background
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:

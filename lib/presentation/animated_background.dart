@@ -26,35 +26,36 @@ class _CustomAnimatedBackgroundState extends State<CustomAnimatedBackground>
     maxOpacity: 0.6,
     spawnMinSpeed: 3.5,
     spawnMaxSpeed: 7.0,
-    spawnMinRadius: 7.0,
-    spawnMaxRadius: 15.0,
-    particleCount: 40,
+    spawnMinRadius: 1.0,
+    spawnMaxRadius: 16.0,
+    particleCount: 60,
   );
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF191B1C),
-              Color(0xFF191D1F),
-            ],
-            stops: [0.0, 1],
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: RadialGradient(
+              tileMode: TileMode.mirror,
+              colors: [
+                Color(0xFF191B1C),
+                Color(0xFF191D1F),
+              ],
+              stops: [0.0, 1],
+            ),
           ),
         ),
-      ),
-      AnimatedBackground(
-        behaviour: RandomParticleBehaviour(
-          options: particleOptions,
-          paint: particlePaint,
+        AnimatedBackground(
+          behaviour: RandomParticleBehaviour(
+            options: particleOptions,
+            paint: particlePaint,
+          ),
+          vsync: this,
+          child: Container(),
         ),
-        vsync: this,
-        child: Container(),
-      ),
-    ]);
+      ],
+    );
   }
 }

@@ -30,7 +30,7 @@ class TodoAddCard extends StatelessWidget {
             height: 300,
             width: 330,
             decoration: BoxDecoration(
-              color: Colors.cyan,
+              color: Colors.blueGrey[900],
               borderRadius: BorderRadius.circular(30),
             ),
           ),
@@ -45,7 +45,7 @@ class TodoAddCard extends StatelessWidget {
             width: 330,
             decoration: BoxDecoration(
               // color: Colors.cyan,
-              color: Colors.cyan,
+              color: Colors.blueGrey[900]!,
               borderRadius: BorderRadius.circular(30),
             ),
             child: buildCard(context),
@@ -98,12 +98,7 @@ class TodoAddCard extends StatelessWidget {
   Expanded _buildTextField() {
     return Expanded(
       child: TextFormField(
-        onEditingComplete: () {
-          print('text');
-        },
-        onFieldSubmitted: (text) {
-          print(text);
-        },
+        // maxLength: 850,
         controller: descController,
         style: const TextStyle(
           color: Colors.white,
@@ -111,6 +106,7 @@ class TodoAddCard extends StatelessWidget {
         maxLines: 20,
         cursorColor: Colors.white,
         decoration: const InputDecoration(
+          // counterText: '',
           hintStyle: TextStyle(
             color: Colors.white,
           ),
@@ -125,11 +121,13 @@ class TodoAddCard extends StatelessWidget {
     return TextField(
       autofocus: kIsWeb,
       controller: titleController,
+      maxLength: 19,
       style: const TextStyle(
         color: Colors.white,
       ),
       cursorColor: Colors.white,
       decoration: const InputDecoration(
+        counterText: '',
         hintStyle: TextStyle(
           color: Colors.white,
         ),

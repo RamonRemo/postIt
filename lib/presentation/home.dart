@@ -24,6 +24,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final controller = HomeController();
+  var _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 0), () {
+      // <-- Delay here
+      setState(() {
+        _isLoading = false; // <-- Code run after delay
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,49 +67,68 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Container _content(double size) {
-    return Container(
-      padding: const EdgeInsets.all(9),
-      // color: Colors.red,
-      child: MasonryGridView.count(
-        crossAxisCount: size > 650 ? 3 : 2,
-        mainAxisSpacing: 9,
-        crossAxisSpacing: 9,
-        itemCount: controller.list.length,
-        itemBuilder: (context, index) {
-          final item = controller.list[index];
+  _content(double size) {
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(
+              color: Colors.blueGrey[500],
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.all(9),
+            // color: Colors.red,
+            child: MasonryGridView.count(
+              crossAxisCount: size > 650 ? 3 : 2,
+              mainAxisSpacing: 9,
+              crossAxisSpacing: 9,
+              shrinkWrap: true,
+              itemCount: controller.list.length,
+              itemBuilder: (context, index) {
+                final item = controller.list[index];
 
-          return TodoCard(
-            title: item.title,
-            description: item.description,
-            heroTag: item.hero,
-            onTap: () {
-              Navigator.of(context).push(
-                HeroDialogRoute(
-                  builder: (_) {
-                    return TodoEditCard(
-                      entity: PostItEntity(
-                        title: item.title,
-                        description: item.description,
-                        hero: item.hero,
+                return TodoCard(
+                  title: item.title,
+                  description: item.description,
+                  heroTag: item.hero,
+                  color: item.color,
+                  onDelete: () {
+                    setState(() {
+                      controller.list.removeAt(index);
+                    });
+                  },
+                  onTap: () {
+                    Navigator.of(context).push(
+                      HeroDialogRoute(
+                        builder: (_) {
+                          return TodoEditCard(
+                            entity: PostItEntity(
+                              title: item.title,
+                              description: item.description,
+                              hero: item.hero,
+                              color: item.color,
+                            ),
+                            onEdit: (PostItEntity entity) {
+                              setState(() {
+                                controller.list.removeAt(index);
+                                controller.list.insert(index, entity);
+
+                                if (entity.description.length > 800 &&
+                                    _lookForErrorPostIt()) {
+                                  controller.list.add(_createErrorPostIt());
+                                }
+
+                                Navigator.pop(context);
+                              });
+                            },
+                          );
+                        },
                       ),
-                      onEdit: (PostItEntity entity) {
-                        setState(() {
-                          controller.list.removeAt(index);
-                          controller.list.insert(index, entity);
-
-                          Navigator.pop(context);
-                        });
-                      },
                     );
                   },
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
-        },
-      ),
-    );
   }
 
   _button(context) {
@@ -114,6 +145,12 @@ class _HomeState extends State<Home> {
                     onAdd: (PostItEntity entity) {
                       setState(() {
                         controller.list.add(entity);
+
+                        if (entity.description.length > 800 &&
+                            _lookForErrorPostIt()) {
+                          controller.list.add(_createErrorPostIt());
+                        }
+
                         Navigator.pop(context);
                       });
                     },
@@ -143,5 +180,31 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  PostItEntity _createErrorPostIt() {
+    setState(() {
+      controller.particleColors.add(Colors.red);
+    });
+
+    return PostItEntity(
+      title: "Oops!",
+      color: Colors.redAccent,
+      description:
+          "We are having some scroll problems with long texts, we will fix it soon.",
+      hero: Home.heroGiver(),
+    );
+  }
+
+  bool _lookForErrorPostIt() {
+    bool hasErrorPostIt = true;
+
+    for (var postIt in controller.list) {
+      if (postIt.title == "Oops!") {
+        hasErrorPostIt = false;
+      }
+    }
+
+    return hasErrorPostIt;
   }
 }

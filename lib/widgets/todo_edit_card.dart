@@ -85,7 +85,7 @@ class TodoEditCard extends StatelessWidget {
         onEdit(model);
       },
       child: const Text(
-        'Add',
+        'Update',
         style: TextStyle(
           color: Colors.white,
         ),
@@ -97,6 +97,7 @@ class TodoEditCard extends StatelessWidget {
     descController.text = entity.description;
     return Expanded(
       child: TextFormField(
+        // maxLength: 850,
         onEditingComplete: () {
           print('text');
         },
@@ -110,6 +111,7 @@ class TodoEditCard extends StatelessWidget {
         maxLines: 20,
         cursorColor: Colors.white,
         decoration: const InputDecoration(
+          // counterText: '',
           hintStyle: TextStyle(
             color: Colors.white,
           ),
@@ -130,7 +132,9 @@ class TodoEditCard extends StatelessWidget {
         color: Colors.white,
       ),
       cursorColor: Colors.white,
+      maxLength: 19,
       decoration: const InputDecoration(
+        counterText: '',
         hintStyle: TextStyle(
           color: Colors.white,
         ),
